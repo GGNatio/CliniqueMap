@@ -1,0 +1,88 @@
+import { CLINICS_RAW_URL } from '../config'
+import type { Clinic, ClinicCategory } from '../types'
+
+export interface ClinicsFile {
+  updatedAt: string
+  clinics: Clinic[]
+}
+
+const CATEGORIES = new Set<ClinicCategory>(['urgence', 'veterinaire'])
+
+export async function hashText(text: string): Promise<string> {
+  const data = new TextEncoder().encode(text)
+  const digest = await crypto.subtle.digest('SHA-256', data)
+  return Array.from(new Uint8Array(digest))
+    .map((b) => b.toString(16).padStart(2, '0'))
+    .join('')
+}
+
+function isClinic(value: unknown): value is Clinic {
+  if (!value || typeof value !== 'object') return false
+  const c = value as Record<string, unknown>
+  return (
+    typeof c.id === 'string' &&
+    typeof c.name === 'string' &&
+    typeof c.address === 'string' &&
+    typeof c.lat === 'number' &&
+    typeof c.lng === 'number' &&
+    typeof c.category === 'string' &&
+    CATEGORIES.has(c.category as ClinicCategory)
+  )
+}
+
+export function parseClinicsFile(raw: string): ClinicsFile {
+  const parsed = JSON.parse(raw) as unknown
+
+  if (Array.isArray(parsed)) {
+    const clinics = parsed.filter(isClinic)
+    return { updatedAt: new Date().toISOString(), clinics }
+  }
+
+  if (parsed && typeof parsed === 'object' && Array.isArray((parsed as ClinicsFile).clinics)) {
+    const file = parsed as ClinicsFile
+    return {
+      updatedAt:
+        typeof file.updatedAt === 'string'
+          ? file.updatedAt
+          : new Date().toISOString(),
+      clinics: file.clinics.filter(isClinic),
+    }
+  }
+
+  throw new Error('Format de cliniques.json invalide.')
+}
+
+export function serializeClinicsFile(clinics: Clinic[]): string {
+  const file: ClinicsFile = {
+    updatedAt: new Date().toISOString(),
+    clinics,
+  }
+  return `${JSON.stringify(file, null, 2)}\n`
+}
+
+export async function fetchRemoteClinics(): Promise<{
+  file: ClinicsFile
+  hash: string
+  raw: string
+}> {
+  const url = `${CLINICS_RAW_URL}?t=${Date.now()}`
+  const response = await fetch(url, {
+    cache: 'no-store',
+    headers: { Accept: 'application/json' },
+  })
+
+  if (response.status === 404) {
+    throw new Error(
+      'Fichier GitHub introuvable. Poussez data/cliniques.json sur le dépôt.',
+    )
+  }
+
+  if (!response.ok) {
+    throw new Error(`Impossible de télécharger les cliniques (${response.status}).`)
+  }
+
+  const raw = await response.text()
+  const file = parseClinicsFile(raw)
+  const hash = await hashText(raw)
+  return { file, hash, raw }
+}

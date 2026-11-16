@@ -1,0 +1,103 @@
+{
+  "name": "cliniquemap",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Carte des cliniques d'urgence et vétérinaires pour orientation clients",
+  "author": "Clinique",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/GGNatio/CliniqueMap.git"
+  },
+  "type": "module",
+  "main": "dist-electron/main.js",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc -b && vite build",
+    "lint": "oxlint",
+    "preview": "vite preview",
+    "dist": "npm run build && electron-builder --publish never",
+    "dist:win": "npm run build && electron-builder --win nsis --x64 --publish never",
+    "dist:mac": "npm run build && electron-builder --mac --publish never",
+    "release": "npm run build && electron-builder --win nsis --x64 --publish always"
+  },
+  "dependencies": {
+    "electron-updater": "^6.7.3",
+    "leaflet": "^1.9.4",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1",
+    "react-leaflet": "^5.0.0"
+  },
+  "devDependencies": {
+    "@types/leaflet": "^1.9.22",
+    "@types/node": "^24.19.2",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "@vitejs/plugin-react": "^6.1.2",
+    "concurrently": "^10.0.7",
+    "cross-env": "^10.1.0",
+    "electron": "^45.3.3",
+    "electron-builder": "^26.18.0",
+    "oxlint": "^1.90.0",
+    "typescript": "~7.0.2",
+    "vite": "^8.3.6",
+    "vite-plugin-electron": "^1.2.0",
+    "vite-plugin-electron-renderer": "^1.0.0",
+    "wait-on": "^9.5.1"
+  },
+  "build": {
+    "appId": "com.clinique.cliniquemap",
+    "productName": "CliniqueMap",
+    "copyright": "Copyright © Clinique",
+    "directories": {
+      "output": "release",
+      "buildResources": "build"
+    },
+    "files": [
+      "dist/**/*",
+      "dist-electron/**/*"
+    ],
+    "extraMetadata": {
+      "main": "dist-electron/main.js"
+    },
+    "publish": [
+      {
+        "provider": "github",
+        "releaseType": "release"
+      }
+    ],
+    "mac": {
+      "category": "public.app-category.medical",
+      "target": [
+        "dmg",
+        "zip"
+      ],
+      "icon": "build/icon.png"
+    },
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        }
+      ],
+      "icon": "build/icon.png",
+      "artifactName": "CliniqueMap-Setup-${version}.${ext}"
+    },
+    "nsis": {
+      "oneClick": true,
+      "perMachine": false,
+      "allowToChangeInstallationDirectory": false,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "CliniqueMap",
+      "deleteAppDataOnUninstall": false,
+      "installerLanguages": [
+        "fr_FR",
+        "en_US"
+      ],
+      "language": "1036"
+    }
+  }
+}
