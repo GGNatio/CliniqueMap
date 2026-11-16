@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-11-16T09:36:08.106Z",
+  "updatedAt": "2026-11-16T09:43:05.276Z",
   "clinics": [
     {
       "name": "Advetia",
@@ -94,8 +94,8 @@
       "address": "57 Rue Salvador Allende, 59120 Loos",
       "phone": "03 61 58 23 90",
       "category": "urgence",
-      "lat": 0,
-      "lng": 0,
+      "lat": 50.6026316,
+      "lng": 3.044846,
       "id": "e8797335-772b-4411-8196-6217122bc734"
     },
     {
@@ -103,8 +103,8 @@
       "address": "89 Rue du Molinel, 59700 Marcq-en-Barœul",
       "phone": "03 20 72 16 40",
       "category": "urgence",
-      "lat": 0,
-      "lng": 0,
+      "lat": 50.6860014,
+      "lng": 3.1143572,
       "id": "47152ba0-eebf-4912-a239-0d97b85a7ba9"
     },
     {
@@ -112,9 +112,45 @@
       "address": "2 Bd Stanislas Girardin, 76140 Le Petit-Quevilly",
       "phone": "02 35 63 13 36",
       "category": "veterinaire",
-      "lat": 0,
-      "lng": 0,
+      "lat": 49.4125387,
+      "lng": 1.071692,
       "id": "6a7bf948-8462-431b-bf76-76abc329b550"
+    },
+    {
+      "name": "Exotic Clinic",
+      "address": "38 rue Arqueil, 77176 Nandy",
+      "phone": "01 64 41 93 23",
+      "category": "urgence",
+      "lat": 48.5800281,
+      "lng": 2.5620751,
+      "id": "33eef231-9ad6-4ec6-884c-2a0056ee9bec"
+    },
+    {
+      "name": "Clinique vétérinaire des Halles",
+      "address": "28 Rue du Faubourg-de-Saverne, 67000 Strasbourg",
+      "phone": "03 88 32 33 32",
+      "category": "veterinaire",
+      "lat": 48.5862078,
+      "lng": 7.7398973,
+      "id": "1a1218f6-53b0-4ccf-8cfb-8ad2e3a566ca"
+    },
+    {
+      "name": "LC Vet",
+      "address": "15 Quai des Alpes, 67000 Strasbourg",
+      "phone": "03 88 10 05 00",
+      "category": "urgence",
+      "lat": 48.5753235,
+      "lng": 7.7595461,
+      "id": "b7d86c93-4db3-4644-841e-8e5933642c98"
+    },
+    {
+      "name": "Clinique Vétérinaire VETONAC",
+      "address": "4 Rue Jacquard, 54500 Vandœuvre-lès-Nancy",
+      "phone": "03 83 53 67 07",
+      "category": "veterinaire",
+      "lat": 48.654744,
+      "lng": 6.178217,
+      "id": "835df2bf-c71a-4024-90e0-5ef7de74aaa2"
     }
   ]
 }
