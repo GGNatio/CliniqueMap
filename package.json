@@ -1,7 +1,7 @@
 {
   "name": "cliniquemap",
   "private": true,
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Carte des cliniques d'urgence et vétérinaires pour orientation clients",
   "author": "Clinique",
   "repository": {
