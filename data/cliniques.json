@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-11-16T09:14:32.122Z",
+  "updatedAt": "2026-11-16T09:33:04.250Z",
   "clinics": [
     {
       "name": "Advetia",
@@ -39,7 +39,8 @@
       "category": "urgence",
       "lat": 49.027639,
       "lng": 2.2005858,
-      "id": "80664cba-0bd2-45df-9e35-56557d688191"
+      "id": "80664cba-0bd2-45df-9e35-56557d688191",
+      "phone": "0180709809"
     },
     {
       "name": "Clinique de la gare",
