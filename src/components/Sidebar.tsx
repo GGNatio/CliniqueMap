@@ -4,6 +4,7 @@ import type { UpdateStatus } from '../hooks/useUpdater'
 import type { ClinicsDiff } from '../lib/clinicDiff'
 import type { GeocodeResult } from '../lib/geocode'
 import { formatDistance } from '../lib/geo'
+import { formatDuration } from '../lib/routing'
 import type {
   ClientLocation,
   Clinic,
@@ -258,6 +259,7 @@ export function Sidebar({
                   <strong>{clinic.name}</strong>
                   <p>{clinic.address}</p>
                   {clinic.phone && <p className="muted">{clinic.phone}</p>}
+                  {clinic.email && <p className="muted">{clinic.email}</p>}
                 </li>
               ))}
             </ul>
@@ -335,13 +337,16 @@ export function Sidebar({
                       </span>
                       {client && Number.isFinite(clinic.distanceKm) && (
                         <span className="distance">
-                          {formatDistance(clinic.distanceKm)}
+                          {clinic.durationMin != null
+                            ? `${formatDuration(clinic.durationMin)} · ${formatDistance(clinic.distanceKm)}`
+                            : formatDistance(clinic.distanceKm)}
                         </span>
                       )}
                     </div>
                     <strong>{clinic.name}</strong>
                     <p>{clinic.address}</p>
                     {clinic.phone && <p className="muted">{clinic.phone}</p>}
+                    {clinic.email && <p className="muted">{clinic.email}</p>}
                     {clinic.notes && <p className="notes">{clinic.notes}</p>}
                   </button>
                 </li>

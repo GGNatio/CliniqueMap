@@ -12,6 +12,7 @@ function fingerprint(clinic: Clinic): string {
     name: clinic.name,
     address: clinic.address,
     phone: clinic.phone ?? '',
+    email: clinic.email ?? '',
     notes: clinic.notes ?? '',
     category: clinic.category,
     lat: clinic.lat,

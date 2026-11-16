@@ -10,6 +10,7 @@ import L from 'leaflet'
 import type { ClientLocation, Clinic, ClinicWithDistance } from '../types'
 import { CATEGORY_LABELS } from '../types'
 import { formatDistance } from '../lib/geo'
+import { formatDuration } from '../lib/routing'
 
 import markerIcon2x from 'leaflet/dist/images/marker-icon-2x.png'
 import markerIcon from 'leaflet/dist/images/marker-icon.png'
@@ -127,10 +128,24 @@ export function MapView({
             {CATEGORY_LABELS[clinic.category]}
             <br />
             {clinic.address}
+            {clinic.phone && (
+              <>
+                <br />
+                {clinic.phone}
+              </>
+            )}
+            {clinic.email && (
+              <>
+                <br />
+                {clinic.email}
+              </>
+            )}
             {clinic.distanceKm != null && Number.isFinite(clinic.distanceKm) && (
               <>
                 <br />
-                {formatDistance(clinic.distanceKm)}
+                {clinic.durationMin != null
+                  ? `${formatDuration(clinic.durationMin)} · ${formatDistance(clinic.distanceKm)}`
+                  : formatDistance(clinic.distanceKm)}
               </>
             )}
           </Popup>

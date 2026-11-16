@@ -5,6 +5,7 @@ export interface Clinic {
   name: string
   address: string
   phone?: string
+  email?: string
   notes?: string
   category: ClinicCategory
   lat: number
@@ -19,6 +20,7 @@ export interface ClientLocation {
 
 export interface ClinicWithDistance extends Clinic {
   distanceKm: number
+  durationMin?: number
 }
 
 export const CATEGORY_LABELS: Record<ClinicCategory, string> = {
