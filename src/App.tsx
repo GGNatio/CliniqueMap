@@ -13,11 +13,21 @@ export default function App() {
   const {
     clinics,
     syncStatus,
+    githubToken,
+    publishOpen,
+    publishDiff,
+    publishRemoteCount,
+    publishBusy,
+    publishError,
     addClinic,
     updateClinic,
     removeClinic,
     syncFromGitHub,
-    exportForGitHub,
+    setGithubToken,
+    openPublishModal,
+    closePublishModal,
+    refreshPublishDiff,
+    publishToGithub,
   } = useClinics()
   const {
     status: updateStatus,
@@ -82,6 +92,12 @@ export default function App() {
         updateStatus={updateStatus}
         appVersion={appVersion}
         showUpdater={isDesktop}
+        githubToken={githubToken}
+        publishOpen={publishOpen}
+        publishDiff={publishDiff}
+        publishRemoteCount={publishRemoteCount}
+        publishBusy={publishBusy}
+        publishError={publishError}
         onSearch={handleSearch}
         onPickAddress={handlePickAddress}
         onClearClient={() => {
@@ -95,7 +111,20 @@ export default function App() {
         onSyncClinics={() => {
           void syncFromGitHub()
         }}
-        onExportClinics={exportForGitHub}
+        onForceSyncClinics={() => {
+          void syncFromGitHub({ force: true })
+        }}
+        onOpenPublish={() => {
+          void openPublishModal()
+        }}
+        onClosePublish={closePublishModal}
+        onRefreshPublish={() => {
+          void refreshPublishDiff()
+        }}
+        onPublish={() => {
+          void publishToGithub()
+        }}
+        onGithubTokenChange={setGithubToken}
         onCheckUpdate={() => {
           void checkForUpdates()
         }}

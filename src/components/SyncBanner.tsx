@@ -3,9 +3,10 @@ import type { ClinicsSyncStatus } from '../hooks/useClinics'
 interface SyncBannerProps {
   status: ClinicsSyncStatus
   onSync: () => void
+  onPublish: () => void
 }
 
-export function SyncBanner({ status, onSync }: SyncBannerProps) {
+export function SyncBanner({ status, onSync, onPublish }: SyncBannerProps) {
   if (status.type === 'updated') {
     return (
       <div className="sync-banner sync-banner--updated" role="status">
@@ -21,6 +22,17 @@ export function SyncBanner({ status, onSync }: SyncBannerProps) {
     return (
       <div className="sync-banner" role="status">
         <span>Vérification GitHub…</span>
+      </div>
+    )
+  }
+
+  if (status.type === 'local-changes') {
+    return (
+      <div className="sync-banner sync-banner--local" role="status">
+        <span>Modifs locales non publiées</span>
+        <button type="button" onClick={onPublish}>
+          Centraliser
+        </button>
       </div>
     )
   }

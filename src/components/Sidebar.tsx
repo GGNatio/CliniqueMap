@@ -1,6 +1,7 @@
 import { useMemo, useState } from 'react'
 import type { ClinicInput, ClinicsSyncStatus } from '../hooks/useClinics'
 import type { UpdateStatus } from '../hooks/useUpdater'
+import type { ClinicsDiff } from '../lib/clinicDiff'
 import type { GeocodeResult } from '../lib/geocode'
 import { formatDistance } from '../lib/geo'
 import type {
@@ -11,7 +12,9 @@ import type {
 } from '../types'
 import { CATEGORY_LABELS } from '../types'
 import { AddressSearch } from './AddressSearch'
+import { ApiSettingsModal } from './ApiSettingsModal'
 import { ClinicForm } from './ClinicForm'
+import { PublishModal } from './PublishModal'
 import { SyncBanner } from './SyncBanner'
 import { UpdateBanner } from './UpdateBanner'
 
@@ -29,6 +32,12 @@ interface SidebarProps {
   updateStatus: UpdateStatus
   appVersion: string
   showUpdater: boolean
+  githubToken: string
+  publishOpen: boolean
+  publishDiff: ClinicsDiff | null
+  publishRemoteCount: number
+  publishBusy: boolean
+  publishError: string | null
   onSearch: (query: string) => void
   onPickAddress: (result: GeocodeResult) => void
   onClearClient: () => void
@@ -37,7 +46,12 @@ interface SidebarProps {
   onUpdate: (id: string, input: ClinicInput) => void
   onRemove: (id: string) => void
   onSyncClinics: () => void
-  onExportClinics: () => void
+  onForceSyncClinics: () => void
+  onOpenPublish: () => void
+  onClosePublish: () => void
+  onRefreshPublish: () => void
+  onPublish: () => void
+  onGithubTokenChange: (token: string) => void
   onCheckUpdate: () => void
   onInstallUpdate: () => void
 }
@@ -53,6 +67,12 @@ export function Sidebar({
   updateStatus,
   appVersion,
   showUpdater,
+  githubToken,
+  publishOpen,
+  publishDiff,
+  publishRemoteCount,
+  publishBusy,
+  publishError,
   onSearch,
   onPickAddress,
   onClearClient,
@@ -61,13 +81,19 @@ export function Sidebar({
   onUpdate,
   onRemove,
   onSyncClinics,
-  onExportClinics,
+  onForceSyncClinics,
+  onOpenPublish,
+  onClosePublish,
+  onRefreshPublish,
+  onPublish,
+  onGithubTokenChange,
   onCheckUpdate,
   onInstallUpdate,
 }: SidebarProps) {
   const [filter, setFilter] = useState<Filter>('all')
   const [mode, setMode] = useState<Mode>('search')
   const [editing, setEditing] = useState<Clinic | null>(null)
+  const [apiOpen, setApiOpen] = useState(false)
 
   const visible = useMemo(() => {
     if (filter === 'all') return ranked
@@ -99,9 +125,45 @@ export function Sidebar({
           <p className="sidebar__title">CliniqueMap</p>
           <p className="sidebar__subtitle">Orientation d’urgence</p>
         </div>
+        <button
+          type="button"
+          className="btn btn--ghost sidebar__api"
+          onClick={() => setApiOpen(true)}
+          title="Token API local"
+        >
+          API
+          {githubToken.trim() ? <span className="sidebar__api-dot" /> : null}
+        </button>
       </header>
 
-      <SyncBanner status={syncStatus} onSync={onSyncClinics} />
+      <SyncBanner
+        status={syncStatus}
+        onSync={onSyncClinics}
+        onPublish={onOpenPublish}
+      />
+
+      <ApiSettingsModal
+        open={apiOpen}
+        token={githubToken}
+        onClose={() => setApiOpen(false)}
+        onSave={onGithubTokenChange}
+      />
+
+      <PublishModal
+        open={publishOpen}
+        diff={publishDiff}
+        remoteCount={publishRemoteCount}
+        hasToken={Boolean(githubToken.trim())}
+        busy={publishBusy}
+        error={publishError}
+        onClose={onClosePublish}
+        onOpenApi={() => {
+          onClosePublish()
+          setApiOpen(true)
+        }}
+        onRefresh={onRefreshPublish}
+        onPublish={onPublish}
+      />
 
       <nav className="sidebar__tabs" aria-label="Navigation">
         <button
@@ -141,16 +203,29 @@ export function Sidebar({
             </button>
           </div>
           <p className="panel__hint">
-            Source centrale : <code>data/cliniques.json</code> sur GitHub. Après
-            modification ici, exportez le JSON puis poussez-le sur le dépôt pour
-            tous les PC.
+            Modifiez ici, puis <strong>Centraliser sur GitHub</strong> pour
+            publier les ajouts/suppressions sur tous les PC.
           </p>
           <div className="panel__tools">
-            <button type="button" className="btn btn--ghost" onClick={onSyncClinics}>
-              Télécharger depuis GitHub
+            <button type="button" className="btn btn--primary" onClick={onOpenPublish}>
+              Centraliser sur GitHub
             </button>
-            <button type="button" className="btn btn--ghost" onClick={onExportClinics}>
-              Exporter cliniques.json
+            <button
+              type="button"
+              className="btn btn--ghost"
+              onClick={() => {
+                if (
+                  syncStatus.type === 'local-changes' &&
+                  !confirm(
+                    'Des modifications locales non publiées seront écrasées. Continuer ?',
+                  )
+                ) {
+                  return
+                }
+                onForceSyncClinics()
+              }}
+            >
+              Télécharger depuis GitHub
             </button>
           </div>
           {clinics.length === 0 ? (

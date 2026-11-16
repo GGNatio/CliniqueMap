@@ -56,13 +56,20 @@ Le fichier se trouve dans `release/CliniqueMap-Setup-1.0.0.exe`.
 
 Le fichier **`data/cliniques.json`** sur GitHub est la source unique pour tous les PC.
 
-### Workflow
+### Workflow (depuis l’app)
 
-1. Modifier les cliniques (dans l’app → **Exporter cliniques.json**, ou éditer le fichier à la main)
-2. Remplacer `data/cliniques.json` dans le dépôt et **push**
-3. Sous ~1 minute, chaque PC détecte le changement, affiche **« Hop modif »** et télécharge la nouvelle liste
+1. Ajouter / modifier / supprimer des cliniques sur n’importe quel PC
+2. Cliquer **Centraliser sur GitHub**
+3. Vérifier le diff (Ajouté / Supprimé / Modifié) façon commit
+4. Coller un **token GitHub** (une fois) puis **Envoyer**
+5. Les autres PC récupèrent la liste au démarrage ou sous ~1 minute (**Hop modif**)
 
-L’app vérifie GitHub au démarrage, puis toutes les 60 secondes (bouton **Actualiser** aussi).
+Pas besoin de créer une Release pour les cliniques : seul le fichier JSON est mis à jour.
+
+### Token GitHub
+
+Créer un fine-grained token : dépôt `CliniqueMap`, permission **Contents: Read and write**.  
+Le coller une fois dans le modal (stocké localement sur le PC).
 
 ### Format
 
