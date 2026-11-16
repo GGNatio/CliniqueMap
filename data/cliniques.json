@@ -1,4 +1,93 @@
 {
-  "updatedAt": "2026-11-16T00:00:00.000Z",
-  "clinics": []
+  "updatedAt": "2026-11-16T09:14:32.122Z",
+  "clinics": [
+    {
+      "name": "Advetia",
+      "address": "9 Av. Louis Breguet, 78140 Vélizy-Villacoublay",
+      "category": "urgence",
+      "lat": 48.7802231,
+      "lng": 2.1891977,
+      "id": "52d42865-9f29-4e80-b26f-578fa17ffc63"
+    },
+    {
+      "name": "Nacologie",
+      "address": "61 Rue Crozatier, 75012 Paris",
+      "category": "urgence",
+      "lat": 48.8489936,
+      "lng": 2.3797035,
+      "id": "1942d78a-047e-4ee2-8440-83d152be17af"
+    },
+    {
+      "name": "Clinique des marais",
+      "address": "545 Rte de Paris, 60600 Breuil-le-Vert",
+      "category": "veterinaire",
+      "lat": 49.3651356,
+      "lng": 2.4199925,
+      "id": "2bd710a2-6a2d-4608-be00-6f116cc48bce"
+    },
+    {
+      "name": "Ecole nationale de maison Alfort",
+      "address": "7 quater, avenue du Général de Gaulle, 94700 Maisons-Alfort",
+      "category": "urgence",
+      "lat": 48.8126455,
+      "lng": 2.4223282,
+      "id": "f2c80f8d-03e5-467e-9a68-b79abe1ab6d7"
+    },
+    {
+      "name": "Maison des urgences de Taverny",
+      "address": "2 Rue Marguerite Perey, 95150 Taverny",
+      "category": "urgence",
+      "lat": 49.027639,
+      "lng": 2.2005858,
+      "id": "80664cba-0bd2-45df-9e35-56557d688191"
+    },
+    {
+      "name": "Clinique de la gare",
+      "address": "4 Rue René Echavidre, 95150 Taverny",
+      "category": "veterinaire",
+      "lat": 49.0250265,
+      "lng": 2.2232615,
+      "id": "387f945c-62cf-4421-8e71-478f4b9c6fda"
+    },
+    {
+      "name": "CHV De meaux",
+      "address": "35 Av. du Maréchal Joffre, 77100 Meaux",
+      "category": "urgence",
+      "lat": 48.960159,
+      "lng": 2.8958906,
+      "id": "9712977b-fb24-4978-9f23-e9808fdc366c"
+    },
+    {
+      "name": "Centre Hospitalier École Vétérinaire UniLaSalle",
+      "address": "1 rue des Mouettes, 76130 Mont Saint Aignan",
+      "category": "urgence",
+      "lat": 49.4680479,
+      "lng": 1.0720892,
+      "id": "1eadc39d-f8c6-4738-8f5d-bdac59cfd6f1"
+    },
+    {
+      "name": "Argos Spénac",
+      "address": "100 Bd de la Tour-Maubourg, 75007 Paris",
+      "category": "veterinaire",
+      "lat": 48.8535973,
+      "lng": 2.3093446,
+      "id": "710d6e06-dcf8-44c8-9a56-064831e0bbd2"
+    },
+    {
+      "name": "Passion nac",
+      "address": "24 Rue de Rungis, 75013 Paris",
+      "category": "veterinaire",
+      "lat": 48.8218607,
+      "lng": 2.3442473,
+      "id": "3f31c97a-76f3-4c97-9465-98349feebdb2"
+    },
+    {
+      "name": "Vet In Paris",
+      "address": "89 Rue du Faubourg Saint-Antoine, 75011 Paris",
+      "category": "urgence",
+      "lat": 48.8521074,
+      "lng": 2.3756978,
+      "id": "d8d25265-7379-4ccc-8870-9dbd56b66e52"
+    }
+  ]
 }
