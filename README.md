@@ -82,6 +82,7 @@ Le coller une fois dans le modal (stocké localement sur le PC).
       "name": "Urgences Vétérinaires Lyon",
       "address": "1 Avenue Tony Garnier, Lyon",
       "phone": "04 00 00 00 00",
+      "email": "contact@exemple.fr",
       "notes": "24h/24",
       "category": "urgence",
       "lat": 45.7313,

@@ -21,6 +21,7 @@ export type ClinicInput = {
   name: string
   address: string
   phone?: string
+  email?: string
   notes?: string
   category: ClinicCategory
   lat: number
@@ -108,11 +109,10 @@ export function useClinics() {
 
   const syncFromGitHub = useCallback(
     async (opts?: { silent?: boolean; force?: boolean }) => {
-      const local = clinicsRef.current
-      const snapshot = remoteSnapshotRef.current
-      const dirty = diffClinics(local, snapshot).hasChanges
+      const hasLocalChanges = () =>
+        diffClinics(clinicsRef.current, remoteSnapshotRef.current).hasChanges
 
-      if (dirty && !opts?.force) {
+      if (hasLocalChanges() && !opts?.force) {
         if (!opts?.silent) setSyncStatus({ type: 'local-changes' })
         return { changed: false, skipped: true }
       }
@@ -120,11 +120,22 @@ export function useClinics() {
       if (!opts?.silent) setSyncStatus({ type: 'checking' })
       try {
         const { file, hash } = await fetchRemoteClinics()
+
+        // Re-check après le réseau : ne jamais écraser un ajout local en cours
+        if (hasLocalChanges() && !opts?.force) {
+          setSyncStatus({ type: 'local-changes' })
+          return { changed: false, skipped: true }
+        }
+
         const previous = loadRemoteHash()
         if (previous === hash) {
           setRemoteSnapshot(file.clinics)
           saveRemoteSnapshot(file.clinics)
-          if (!opts?.silent) setSyncStatus({ type: 'uptodate' })
+          if (!opts?.silent) {
+            setSyncStatus(
+              hasLocalChanges() ? { type: 'local-changes' } : { type: 'uptodate' },
+            )
+          }
           return { changed: false }
         }
         applyRemote(file.clinics, hash)

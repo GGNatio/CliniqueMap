@@ -16,25 +16,43 @@ export async function hashText(text: string): Promise<string> {
     .join('')
 }
 
-function isClinic(value: unknown): value is Clinic {
-  if (!value || typeof value !== 'object') return false
+function normalizeClinic(value: unknown): Clinic | null {
+  if (!value || typeof value !== 'object') return null
   const c = value as Record<string, unknown>
-  return (
-    typeof c.id === 'string' &&
-    typeof c.name === 'string' &&
-    typeof c.address === 'string' &&
-    typeof c.lat === 'number' &&
-    typeof c.lng === 'number' &&
-    typeof c.category === 'string' &&
-    CATEGORIES.has(c.category as ClinicCategory)
-  )
+  const lat = typeof c.lat === 'number' ? c.lat : Number(c.lat)
+  const lng = typeof c.lng === 'number' ? c.lng : Number(c.lng)
+  if (
+    typeof c.id !== 'string' ||
+    typeof c.name !== 'string' ||
+    typeof c.address !== 'string' ||
+    !Number.isFinite(lat) ||
+    !Number.isFinite(lng) ||
+    typeof c.category !== 'string' ||
+    !CATEGORIES.has(c.category as ClinicCategory)
+  ) {
+    return null
+  }
+
+  return {
+    id: c.id,
+    name: c.name,
+    address: c.address,
+    phone: typeof c.phone === 'string' && c.phone ? c.phone : undefined,
+    email: typeof c.email === 'string' && c.email ? c.email : undefined,
+    notes: typeof c.notes === 'string' && c.notes ? c.notes : undefined,
+    category: c.category as ClinicCategory,
+    lat,
+    lng,
+  }
 }
 
 export function parseClinicsFile(raw: string): ClinicsFile {
   const parsed = JSON.parse(raw) as unknown
 
   if (Array.isArray(parsed)) {
-    const clinics = parsed.filter(isClinic)
+    const clinics = parsed
+      .map(normalizeClinic)
+      .filter((c): c is Clinic => c !== null)
     return { updatedAt: new Date().toISOString(), clinics }
   }
 
@@ -45,7 +63,9 @@ export function parseClinicsFile(raw: string): ClinicsFile {
         typeof file.updatedAt === 'string'
           ? file.updatedAt
           : new Date().toISOString(),
-      clinics: file.clinics.filter(isClinic),
+      clinics: file.clinics
+        .map(normalizeClinic)
+        .filter((c): c is Clinic => c !== null),
     }
   }
 

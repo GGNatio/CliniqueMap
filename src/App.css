@@ -684,6 +684,39 @@ select:focus {
   overflow: auto;
 }
 
+.clinic-form__name-row {
+  display: flex;
+  gap: 8px;
+  align-items: flex-start;
+  margin-bottom: 6px;
+}
+
+.clinic-form__name-row .address-suggest {
+  flex: 1;
+}
+
+.address-suggest__item {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.address-suggest__item strong {
+  font-size: 0.86rem;
+}
+
+.address-suggest__meta {
+  font-size: 0.75rem;
+  color: var(--ink-soft);
+  line-height: 1.3;
+}
+
+.form-info {
+  color: var(--accent-strong);
+  font-size: 0.84rem;
+  margin: 0 0 10px;
+}
+
 .clinic-form__coords {
   display: grid;
   grid-template-columns: 1fr 1fr;

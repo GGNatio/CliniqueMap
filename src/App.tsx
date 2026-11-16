@@ -1,10 +1,11 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { MapView } from './components/MapView'
 import { Sidebar } from './components/Sidebar'
 import { useClinics } from './hooks/useClinics'
 import { useUpdater } from './hooks/useUpdater'
 import { distanceKm } from './lib/geo'
 import { geocodeAddress, type GeocodeResult } from './lib/geocode'
+import { fetchDrivingDurationsMin } from './lib/routing'
 import type { ClientLocation, ClinicWithDistance } from './types'
 import 'leaflet/dist/leaflet.css'
 import './App.css'
@@ -40,6 +41,38 @@ export default function App() {
   const [selectedId, setSelectedId] = useState<string | null>(null)
   const [searching, setSearching] = useState(false)
   const [searchError, setSearchError] = useState<string | null>(null)
+  const [durationsMin, setDurationsMin] = useState<Record<string, number>>({})
+
+  useEffect(() => {
+    if (!client || clinics.length === 0) {
+      setDurationsMin({})
+      return
+    }
+
+    const controller = new AbortController()
+    const timer = window.setTimeout(async () => {
+      try {
+        const minutes = await fetchDrivingDurationsMin(
+          client,
+          clinics,
+          controller.signal,
+        )
+        if (controller.signal.aborted) return
+        const next: Record<string, number> = {}
+        clinics.forEach((clinic, i) => {
+          next[clinic.id] = minutes[i]
+        })
+        setDurationsMin(next)
+      } catch (e) {
+        if ((e as Error).name !== 'AbortError') setDurationsMin({})
+      }
+    }, 200)
+
+    return () => {
+      controller.abort()
+      window.clearTimeout(timer)
+    }
+  }, [client, clinics])
 
   const ranked: ClinicWithDistance[] = useMemo(() => {
     const withDistance = clinics.map((clinic) => ({
@@ -47,12 +80,22 @@ export default function App() {
       distanceKm: client
         ? distanceKm(client.lat, client.lng, clinic.lat, clinic.lng)
         : Number.NaN,
+      durationMin: client ? durationsMin[clinic.id] : undefined,
     }))
 
     if (!client) return withDistance
 
-    return [...withDistance].sort((a, b) => a.distanceKm - b.distanceKm)
-  }, [clinics, client])
+    return [...withDistance].sort((a, b) => {
+      if (
+        a.durationMin != null &&
+        b.durationMin != null &&
+        a.durationMin !== b.durationMin
+      ) {
+        return a.durationMin - b.durationMin
+      }
+      return a.distanceKm - b.distanceKm
+    })
+  }, [clinics, client, durationsMin])
 
   function handlePickAddress(result: GeocodeResult) {
     setSearchError(null)
